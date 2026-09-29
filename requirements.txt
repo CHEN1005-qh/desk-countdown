@@ -1,0 +1,8 @@
+# Runtime
+PyQt6>=6.11.0
+
+# Development & Test
+pytest>=9.1.1
+
+# Packaging
+pyinstaller>=6.22.3
