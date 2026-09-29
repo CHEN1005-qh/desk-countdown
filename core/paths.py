@@ -20,7 +20,7 @@ def app_root() -> Path:
 
 def resource_root() -> Path:
     if _is_frozen():
-        return Path(getattr(sys, "_MEIPASS", ""))
+        return Path(getattr(sys, "_MEIPASS", "")) / "resources"
     return Path(__file__).resolve().parent.parent / "resources"
 
 
