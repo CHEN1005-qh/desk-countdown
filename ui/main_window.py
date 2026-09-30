@@ -300,6 +300,9 @@ class MainWindow(QMainWindow):
                 [("知道了", "dismiss"), ("开始休息", "next")],
             )
             self._ringtone.stop()
+            if result == "next":
+                # 延迟到 Pomodoro._enter() 之后执行，确保新阶段已就绪
+                QTimer.singleShot(0, self._timer_page.resume)
         else:
             self._ringtone.ring(3)
             QTimer.singleShot(3000, self._ringtone.stop)

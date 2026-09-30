@@ -66,6 +66,16 @@ QLabel#danger {{
     color: {t["danger"]};
 }}
 
+/* ===== 事件卡片 ===== */
+QFrame#EventCard {{
+    background-color: {t["card"]};
+    border-radius: 10px;
+    border: 1px solid transparent;
+}}
+QFrame#EventCard[overdue="true"] {{
+    border: 1px solid {t["danger"]};
+}}
+
 /* ===== 按钮 ===== */
 QPushButton {{
     background-color: {t["accent"]};

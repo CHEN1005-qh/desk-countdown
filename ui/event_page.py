@@ -39,16 +39,6 @@ class EventCard(QFrame):
         self.event = event
         self._repo = repo
         self.setFrameShape(QFrame.Shape.StyledPanel)
-        self.setStyleSheet("""
-            EventCard {
-                background-color: #252529;
-                border-radius: 10px;
-                border: 1px solid transparent;
-            }
-            EventCard[overdue="true"] {
-                border: 1px solid #FF453A;
-            }
-        """)
         self.setObjectName("EventCard")
         self.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.customContextMenuRequested.connect(self._show_menu)

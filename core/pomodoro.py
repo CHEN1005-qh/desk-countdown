@@ -95,6 +95,8 @@ class Pomodoro(QObject):
         """手动跳过当前阶段：不计统计，直接进入下一阶段；运行状态保持。"""
         if self.phase is Phase.IDLE:
             return
+        if self.phase is Phase.LONG_BREAK:
+            self.cycle_dots = 0
         nxt = self._next_after(self.phase)
         self._enter(nxt, running=self.running)
 
@@ -146,6 +148,10 @@ class Pomodoro(QObject):
             self._stats.record(int(round(self._duration / 60)), "pomodoro")
         elif ended is Phase.LONG_BREAK:
             self.cycle_dots = 0
+
+        # 先置为停止态，防止弹窗 exec() 阻塞期间被重复触发
+        self.running = False
+        self._remain = 0.0
 
         nxt = self._next_after(ended)
         self.phase_finished.emit(ended)

@@ -250,8 +250,10 @@ class TimerPage(QWidget):
             self._phase_lbl.setText(PHASE_LABEL.get(self._pomodoro.phase, ""))
             # 进度点
             total = self._pomodoro.long_break_every()
-            dots = "●" * self._pomodoro.cycle_dots + "○" * (total - self._pomodoro.cycle_dots)
-            self._dots_lbl.setText(f"{dots}  本轮 {self._pomodoro.cycle_dots}/{total}")
+            filled = min(self._pomodoro.cycle_dots, total)
+            empty = max(0, total - self._pomodoro.cycle_dots)
+            dots = "●" * filled + "○" * empty
+            self._dots_lbl.setText(f"{dots}  本轮 {filled}/{total}")
 
     def _update_controls(self):
         if self._mode == "countdown":
@@ -264,12 +266,22 @@ class TimerPage(QWidget):
     def _on_timer_state(self, state):
         self._update_controls()
 
+    def _host(self):
+        """返回持有 timer_finished / phase_finished 信号的主窗口（顶层窗口）。
+
+        TimerPage 被 addWidget 到 QStackedWidget 后 parent 变成 QStackedWidget，
+        它没有这两个信号；必须向上找到真正的顶层窗口。
+        """
+        win = self.window()
+        return win if hasattr(win, "timer_finished") else None
+
     def _on_timer_finished(self):
         self._update_display()
         self._update_controls()
         # 通知主窗口响铃
-        if self.parent():
-            self.parent().timer_finished.emit("countdown")
+        host = self._host()
+        if host is not None:
+            host.timer_finished.emit("countdown")
 
     def _on_phase_changed(self, phase):
         self._update_display()
@@ -278,8 +290,9 @@ class TimerPage(QWidget):
     def _on_phase_finished(self, phase):
         self._update_display()
         self._update_controls()
-        if self.parent():
-            self.parent().phase_finished.emit(phase.value)
+        host = self._host()
+        if host is not None:
+            host.phase_finished.emit(phase.value)
 
     def _on_run_state_changed(self, running):
         self._update_controls()

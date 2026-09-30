@@ -104,8 +104,7 @@ class RingtoneManager(QObject):
             self._sfx.setSource(QUrl())
             self._sfx.setSource(QUrl.fromLocalFile(str(path)))
             self._sfx.setVolume(vol)
-            self._sfx.setLoopCount(
-                QSoundEffect.Loop.Infinite if loop else 1)
+            self._sfx.setLoopCount(-1 if loop else 1)
             self._sfx.play()
         else:
             self._sfx.stop()
